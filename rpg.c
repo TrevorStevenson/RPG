@@ -1,36 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "rpg.h"
 
-void displayStory(char *story, char *option1, char *option2);
-int getInt();
+#define MAX_LINE_LENGTH 500
 
 int main(int argc, char *argv[])
 {
-    displayStory("Your eyes open, and all you see is darkness.", "Go back to sleep.", "Look around.");
-
+    TreeNode *root = createTree();
+    displayStory(root);
     int input = getInt();
-
-    if (input == 1)
-    {
-        printf("1 pressed\n");
-    }
-    else if (input == 2)
-    {
-        printf("2 pressed\n");
-    }
-    else
-    {
-        printf("Invalid input.\n", );
-    }
-
+    free(root);
     return 0;
 }
 
-void displayStory(char *story, char *option1, char *option2)
+TreeNode * createTree()
 {
-    printf("%s\n", story);
-    printf("Press 1: %s\n", option1);
-    printf("Press 2: %s\n", option2);
+    FILE *f;
+    f = fopen("story.txt", "r");
+
+    char line[MAX_LINE_LENGTH];
+    fgets(line, MAX_LINE_LENGTH, f);
+    TreeNode *tree = (TreeNode *) malloc(sizeof(TreeNode));
+
+    while (strcmp(line, "END\n") != 0)
+    {
+        tree->story = strdup(line);
+        fgets(line, MAX_LINE_LENGTH, f);
+        tree->option1 = strdup(line);
+        fgets(line, MAX_LINE_LENGTH, f);
+        tree->option2 = strdup(line);
+        fgets(line, MAX_LINE_LENGTH, f);
+    }
+
+    fclose(f);
+
+    return tree;
+}
+
+void displayStory(TreeNode *tree)
+{
+    printf("%s", tree->story);
+    printf("Press 1: %s", tree->option1);
+    printf("Press 2: %s", tree->option2);
 }
 
 int getInt()
@@ -43,7 +55,7 @@ int getInt()
 
     if (*error != '\0')
     {
-        printf("Invalid input: %s", error);
+        printf("Invalid input");
         return -1;
     }
 

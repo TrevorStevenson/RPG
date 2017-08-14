@@ -1,0 +1,4 @@
+Your eyes open, and all you see is darkness.
+Go back to sleep.
+Look around.
+END
